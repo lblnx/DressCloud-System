@@ -1,18 +1,3 @@
-# =============================================================================
-# DressFlow — Dockerfile
-# Archivo: .docker/Dockerfile
-#
-# Propósito: Imagen optimizada para ejecutar pruebas locales y simular el
-#            entorno de Cloudflare Workers usando Wrangler CLI con Miniflare.
-#
-# Etapas:
-#   1. base         → Node.js + dependencias del sistema
-#   2. dependencies → Instalación de paquetes npm
-#   3. test         → Entorno para ejecutar pruebas unitarias
-#   4. dev          → Entorno de desarrollo local con hot-reload
-# =============================================================================
-
-# ── Etapa 1: Imagen base ─────────────────────────────────────────────────────
 FROM node:20-alpine AS base
 
 # Metadatos de la imagen
@@ -43,10 +28,9 @@ WORKDIR /app
 FROM base AS dependencies
 
 # Copiar solo archivos de manifiesto primero (aprovecha cache de Docker)
-# Si package.json no cambia, Docker reutiliza esta capa en el siguiente build
 COPY package.json package-lock.json* ./
 
-# Instalar todas las dependencias (incluyendo devDependencies para pruebas)
+# Instalar todas las dependencias 
 RUN npm ci --include=dev
 
 # Instalar Wrangler globalmente para simular el entorno de Cloudflare
